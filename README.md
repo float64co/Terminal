@@ -14,7 +14,7 @@ a real terminal.
 
     python3 terminal.py
 
-Needs `solvent.py` alongside it (already in this repo) for its unit data.
+No dependencies beyond the Python standard library.
 
 ## Controls
 
@@ -27,6 +27,6 @@ click/drag/right-click work too · `1`-`9` recall a control group,
 
     python3 build_web.py
 
-Inlines `terminal.py`, `solvent.py`, `web_curses.py` (an in-browser
-curses shim), and `web_bridge.py` into `template.html` → `index.html`,
-the whole game as one self-contained, ship-anywhere file.
+Inlines `terminal.py`, `web_curses.py` (an in-browser curses shim), and
+`web_bridge.py` into `template.html` → `index.html`, the whole game as
+one self-contained, ship-anywhere file.

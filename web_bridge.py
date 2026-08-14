@@ -1,12 +1,12 @@
 """
 Terminal web bridge.
 
-Unlike solvent.py's web build (a turn-based JSON command API), terminal.py
-is a real-time curses grid game, so this bridge doesn't model "views" or
-"commands" - it just wires together the pieces the JS side already loaded
-into sys.modules (see the boot sequence in template.html: 'curses' is the
-web_curses shim, 'solvent' is solvent.py's logic-only slice, 'terminal' is
-the untouched game) and exposes a handful of functions JS calls directly:
+Unlike Solvent's web build (a sibling project's turn-based JSON command
+API), terminal.py is a real-time curses grid game, so this bridge doesn't
+model "views" or "commands" - it just wires together the pieces the JS
+side already loaded into sys.modules (see the boot sequence in
+template.html: 'curses' is the web_curses shim, 'terminal' is the
+untouched game) and exposes a handful of functions JS calls directly:
 push input, advance exactly one tick, read back the rendered screen.
 """
 import json

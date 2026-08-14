@@ -79,9 +79,6 @@ initializing python runtime (first load fetches ~12 MB; cached after)...</pre>
 <script type="text/x-python" id="py-curses">
 __PY_CURSES__
 </script>
-<script type="text/x-python" id="py-solvent">
-__PY_SOLVENT__
-</script>
 <script type="text/x-python" id="py-terminal">
 __PY_TERMINAL__
 </script>
@@ -116,7 +113,6 @@ async function boot() {
       py.runPython(LOAD_MODULE_SRC);
       const loadModule = py.globals.get("_load_module");
       loadModule("curses", document.getElementById("py-curses").textContent);
-      loadModule("solvent", document.getElementById("py-solvent").textContent);
       loadModule("terminal", document.getElementById("py-terminal").textContent);
       loadModule.destroy();
       py.runPython(document.getElementById("py-bridge").textContent);

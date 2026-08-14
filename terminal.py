@@ -8,7 +8,11 @@ the far side of an unmapped ruin. Explore the ruin under fog of war,
 select and command squads of frames, and grind the rival workshop into
 scrap before yours goes down first.
 
-Units are the mech chassis ("frames") from solvent.py's CHASSIS table.
+Units are mech chassis ("frames"); their stats live in the CHASSIS table
+below, alongside the OUTFITS table the difficulty tiers are drawn from.
+Both were originally shared with solvent.py, Float64's turn-based mech
+RPG - this file no longer depends on it, but the tables (and the flavor
+text) are carried over verbatim.
 
 Controls:
     Arrow keys / WASD   - move the command cursor (camera follows)
@@ -35,7 +39,50 @@ import curses
 import random
 from dataclasses import dataclass
 
-from solvent import CHASSIS, OUTFITS
+# --------------------------------------------------------------------------
+# Mech chassis and rival outfits (carried over from solvent.py so this file
+# has no external dependency)
+# --------------------------------------------------------------------------
+
+CHASSIS = {
+    # name: cost, hp, armor, speed, evade, hardpoints, tech gate (or None)
+    "Wisp":     dict(cost=550,  hp=40,  armor=0, speed=16, evade=15, hardpoints=1, tech=None,
+                     desc="Recon quadcopter. Hard to hit, easy to break."),
+    "Haund":    dict(cost=700,  hp=55,  armor=2, speed=13, evade=5,  hardpoints=1, tech=None,
+                     desc="Quadruped gun-dog. Loyal to the invoice."),
+    "Jackal":   dict(cost=800,  hp=60,  armor=2, speed=12, evade=0,  hardpoints=1, tech=None,
+                     desc="Light bipedal frame. Fast, fragile, cheap."),
+    "Brute":    dict(cost=1600, hp=100, armor=4, speed=8,  evade=0,  hardpoints=2, tech=None,
+                     desc="Workhorse medium biped. The industry standard."),
+    "Kestrel":  dict(cost=2200, hp=110, armor=3, speed=14, evade=10, hardpoints=2, tech="rotorcraft",
+                     desc="Autonomous attack rotorcraft. Death from above, invoiced hourly."),
+    "Warden":   dict(cost=2800, hp=150, armor=6, speed=6,  evade=0,  hardpoints=2, tech="heavy_frames",
+                     desc="Heavy bipedal frame. Walking bunker."),
+    "Ferrum":   dict(cost=3200, hp=190, armor=9, speed=5,  evade=0,  hardpoints=2, tech="tracked_autonomy",
+                     desc="Uncrewed main battle tank. Argues in 120mm."),
+    "Shrike":   dict(cost=5200, hp=130, armor=4, speed=20, evade=20, hardpoints=2, tech="airframe",
+                     desc="Autonomous fighter jet. Sortie fees not included."),
+    "Colossus": dict(cost=4600, hp=220, armor=8, speed=4,  evade=0,  hardpoints=3, tech="colossus_frames",
+                     desc="Superheavy bipedal platform. A mortgage with legs."),
+    "Halo Array": dict(cost=9000, hp=90, armor=3, speed=18, evade=25, hardpoints=2, tech="orbital_array",
+                     desc="Orbital laser relay. The high ground, permanently."),
+}
+
+# Rival outfits, in campaign order.
+OUTFITS = [
+    dict(name="Rustwater Irregulars", tier=1, credits=1200, salvage=5,
+         blurb="Scrap-fed militia running two rusted Jackals. Someone has to be first."),
+    dict(name="Kinetic Solutions", tier=2, credits=2000, salvage=8,
+         blurb="A logistics firm that discovered ordnance pays better than freight."),
+    dict(name="Deniable Assets", tier=3, credits=3000, salvage=12,
+         blurb="Nobody hires them. Officially."),
+    dict(name="Severance Clause", tier=4, credits=4200, salvage=16,
+         blurb="They terminate contracts. And contractors."),
+    dict(name="Hostile Acquisitions", tier=5, credits=5600, salvage=22,
+         blurb="Mergers by main force. Their portfolio is on fire and so is yours."),
+    dict(name="Force Majeure", tier=6, credits=9000, salvage=40,
+         blurb="The event no contract survives. Beat them and the market is yours."),
+]
 
 # --------------------------------------------------------------------------
 # Intro
@@ -83,7 +130,7 @@ START_CREDITS_PLAYER = 3000
 STARTER_UNITS_PLAYER = 3
 
 # Difficulty levels: progressively bigger maps and progressively harder
-# rival outfits, named and blurbed straight out of solvent.py's OUTFITS.
+# rival outfits, named and blurbed straight out of the OUTFITS table above.
 DIFFICULTIES = [
     dict(name=OUTFITS[0]["name"], blurb=OUTFITS[0]["blurb"],
          world_w=200, world_h=70,
@@ -125,7 +172,7 @@ STARTER_CHASSIS = ["Wisp", "Haund", "Jackal", "Brute"]
 
 
 # --------------------------------------------------------------------------
-# Unit types, derived from solvent.py's CHASSIS table
+# Unit types, derived from the CHASSIS table above
 # --------------------------------------------------------------------------
 
 @dataclass
